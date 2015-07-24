@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+SKYDNS_VERSION=$1
+
+set +x
+docker build -t skydnsbuild .
+docker run -e "SKYDNS_VERSION=${SKYDNS_VERSION}" -v $(greadlink -f ./out):/opt/go/bin skydnsbuild
+curl -T $(greadlink -f ./out/skydns) -ujchen:${BINTRAY_TOKEN} "https://api.bintray.com/content/jchen/skydns/skydns/${SKYDNS_VERSION}/skydns?publish=1"
